@@ -1,3 +1,5 @@
+import random
+
 # ____________________"BOARD"____________________
 
 a1 = ' '
@@ -75,11 +77,17 @@ def minimax(is_maximizing):
 
 def computerMove():
     spots = ['a1','a2','a3','b1','b2','b3','c1','c2','c3']
-    best_score = -float('inf')
-    best_move = ""
+    empty_spots = [s for s in spots if globals()[s] == ' ']
+    
+    error_rate = 0.4
+    
+    if random.random() < error_rate:
+        best_move = random.choice(empty_spots)
+    else:
+        best_score = -float('inf')
+        best_move = ""
 
-    for s in spots:
-        if globals()[s] == ' ':
+        for s in empty_spots:
             globals()[s] = 'O'
             score = minimax(False)
             globals()[s] = ' '
