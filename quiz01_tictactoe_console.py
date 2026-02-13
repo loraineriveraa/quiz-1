@@ -1,4 +1,4 @@
-import random
+# ____________________"BOARD"____________________
 
 a1 = ' '
 a2 = ' '
@@ -25,7 +25,6 @@ def printBoard():
      '   1 2 3'
     print(board)
 
-
 def checkWin(player):
     global a1,a2,a3,b1,b2,b3,c1,c2,c3
     if a1 == a2 == a3 == player: return True
@@ -41,19 +40,56 @@ def checkWin(player):
 
     return False
 
-
 def checkDraw():
     global a1,a2,a3,b1,b2,b3,c1,c2,c3
     spaces = [a1,a2,a3,b1,b2,b3,c1,c2,c3]
     return ' ' not in spaces
 
+# ____________________"COMPUTER BRAIN (naols)"____________________
+
+def minimax(is_maximizing):
+    if checkWin('O'): return 1
+    if checkWin('X'): return -1
+    if checkDraw(): return 0
+
+    spots = ['a1','a2','a3','b1','b2','b3','c1','c2','c3']
+    
+    if is_maximizing:
+        best_score = -float('inf')
+        for s in spots:
+            if globals()[s] == ' ':
+                globals()[s] = 'O'
+                score = minimax(False)
+                globals()[s] = ' '
+                best_score = max(score, best_score)
+        return best_score
+    else:
+        best_score = float('inf')
+        for s in spots:
+            if globals()[s] == ' ':
+                globals()[s] = 'X'
+                score = minimax(True)
+                globals()[s] = ' '
+                best_score = min(score, best_score)
+        return best_score
 
 def computerMove():
     spots = ['a1','a2','a3','b1','b2','b3','c1','c2','c3']
-    empty = [s for s in spots if globals()[s] == ' ']
-    move = random.choice(empty)
-    globals()[move] = 'O'
-    print(f"Computer chose {move}")
+    best_score = -float('inf')
+    best_move = ""
+
+    for s in spots:
+        if globals()[s] == ' ':
+            globals()[s] = 'O'
+            score = minimax(False)
+            globals()[s] = ' '
+            if score > best_score:
+                best_score = score
+                best_move = s
+
+    if best_move:
+        globals()[best_move] = 'O'
+        print(f"Computer chose {best_move}")
 
 #____________________"GAME STARTS HERE :D!!!"____________________
 
@@ -61,7 +97,7 @@ print("|                                              |")
 print("|______________________________________________|")
 print(f'|                                              |'"\n"\
     f'\033[1m'"| WELCOME TO A SIMPLE GAME OF TIC-TAC-TOE! >:3 |"'\033[0m'"\n"\
-      f"|        made by yours truly, lori <3!         |")
+    f"|         made by yours truly, lori <3!        |")
 print("+______________________________________________+")
 print()
 
@@ -131,5 +167,3 @@ while playAgain:
             break
         else:
             print("Please type 'y' or 'n'!!!")
-
-# I genuinely hope this works, or else im gonna be breaking down for the nth time. :D
