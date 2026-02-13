@@ -112,7 +112,7 @@ class tttGui:
 
         cat_art = ("╱|、 \n"
                    "(˚ˎ 。7  \n"
-                "|、 ˜ 〵 \n"
+                   "|、 ˜ 〵 \n"
                    " じしˍ,)ノ")
         signature = "made by yours truly, lori <3!"
         
@@ -194,37 +194,24 @@ class tttGui:
         color = self.color_dviolet if self.currentPlayer == 'X' else self.color_dpurple
         self.buttons[row][col].config(text=self.currentPlayer, fg=color, state="disabled",
                                       disabledforeground=color, bg=self.color_white)
-        
-        def computer_move(self):
 
-            error_rate = 0.2
-
-            empty_cells = [(r, c) for r in range(3) for c in range(3) if self.board[r][c] == 0]
-            if not empty_cells:
-                return
-            
-            if random.random() < error_rate:
-                r, c = random.choice(empty_cells)
-            else:
-                best_score, best_move = -float('inf'), None
-                for r_idx, c_idx in empty_cells:
-                    self.board[r_idx][c_idx] = self.playerO
+    def computer_move(self):
+        best_score, best_move = -float('inf'), None
+        for r in range(3):
+            for c in range(3):
+                if self.board[r][c] == 0:
+                    self.board[r][c] = self.playerO
                     score = self.minimax(self.board, 0, False)
-                    self.board[r_idx][c_idx] = 0
-                    if score > best_score:
-                        best_score, best_move = score, (r_idx, c_idx)
-                        r, c = best_move
-                        
-                        self.board[r][c] = self.playerO
-                        self.update_button_ui(r, c)
-                        if self.check_winner(): 
-                            self.end_game("Computer Wins! :]")
-                        elif self.check_draw(): 
-                            self.end_game("It's a draw! >:[")
-                        else: 
-                            self.computer_thinking = False
-                            self.switch_player()
-                            
+                    self.board[r][c] = 0
+                    if score > best_score: best_score, best_move = score, (r, c)
+        if best_move:
+            r, c = best_move
+            self.board[r][c] = self.playerO
+            self.update_button_ui(r, c)
+            if self.check_winner(): self.end_game("Computer Wins! :]")
+            elif self.check_draw(): self.end_game("It's a draw! >:[")
+            else: self.computer_thinking = False; self.switch_player()
+
     def minimax(self, board, depth, is_max):
         if self.check_winner_static(board, self.playerO): return 10 - depth
         if self.check_winner_static(board, self.playerX): return depth - 10
@@ -268,3 +255,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     game = tttGui(root)
     root.mainloop()
+
+# I'm not sure how to fix the computer oppponent cause it will always win, or draw.
