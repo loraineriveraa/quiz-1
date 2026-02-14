@@ -79,7 +79,7 @@ def computerMove():
     spots = ['a1','a2','a3','b1','b2','b3','c1','c2','c3']
     empty_spots = [s for s in spots if globals()[s] == ' ']
     
-    error_rate = 0.4
+    error_rate = 0.3
     
     if random.random() < error_rate:
         best_move = random.choice(empty_spots)
@@ -175,3 +175,4 @@ while playAgain:
             break
         else:
             print("Please type 'y' or 'n'!!!")
+
